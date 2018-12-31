@@ -20,6 +20,7 @@ let startTimeValue, endTimeValue, colorValue, fontSizeValue, fontAspectRatioValu
 async function doSettings(){
     
     pluginDataFolder    = await fs.getDataFolder() ;
+    
     try {
         settingsFile        = await pluginDataFolder.getEntry("timer-settings.txt") ;
         settings            = await settingsFile.read() ;
