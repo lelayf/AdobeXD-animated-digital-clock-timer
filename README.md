@@ -14,7 +14,7 @@ I created this plugin to easily add custom animated countdown timers to your art
     - the start time on your first artboard
     - the end time on the second artboard
 6. Switch to _Prototype_ mode.
-7. Add a transition between between the first artboard and the second one:
+7. Add a transition between the first artboard and the second one:
     - Use any trigger you like (_Time_ with no delay works well for this demo), 
     - _Auto-animate_
     - _Ease-In-Out_
