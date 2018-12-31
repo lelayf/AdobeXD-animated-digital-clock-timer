@@ -1,10 +1,6 @@
 # Animated Digital Clock Timer
 
-I created this plugin to make it easier to design mobile apps that rely on time-based interactions. 
-More specifically, it displays the time remaining in a game in minutes and seconds, or hours and minutes (eg. 13:37).
-The plugin will create those numbers and mask a whole lot more that would otherwise be tedious to setup by hand.
-With auto-animate transitions in place, your timer will then offer visually explicit countdowns between any 2 artboards.
-It should look like flight departure times on those big mechanical time tables in the hallways of airports.
+I created this plugin to easily add custom animated countdown timers to your artboards using auto-animate transitions. It is useful if you design mobile apps that rely on time-based interactions supported by an actual timer or stopwatch in the UI. More specifically, it creates and masks a bunch of vertical text strips used to display the time remaining in a game, in minutes and seconds, or hours and minutes (eg. 13:37). Once animated, it should look like flight departure times on those big mechanical timetables in the hallways of airports (or a time-lapse of an alarm clock from the 70s). Based on original work by [Howard Pinsky](https://twitter.com/pinsky).
 
 ![Timer GIF](https://cdn.dribbble.com/users/2864445/screenshots/5673255/timer-black-800-600-9.gif)
 
@@ -40,5 +36,6 @@ From there you can repeat that procedure between any 2 selected artboards, makin
 ## Contributing
 
 Please use the [Issues](https://github.com/lelayf/AdobeXD-animated-digital-clock-timer/issues) page to report bugs, contribute fixes and make feature requests.
+
 
 
