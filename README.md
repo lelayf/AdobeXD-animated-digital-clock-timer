@@ -27,6 +27,7 @@ From there you can repeat that procedure between any 2 selected artboards, makin
 1. To move your timer groups, simply shift-select them both in design mode and move them around.
 2. XD does not have a Fonts API, so for now I decided to let users type the name of their font rather than trap them in a predefined list of common fonts.
 3. The plugin modal dialog will remember the last values you used by storing them in a plugin-specific data file locally on your computer. If you ever run out of storage space that caching feature will silently fail and the dialog will always show the plugin defaults.
+4. If you ever needed to rename the masked groups created by the plugin, make sure to give them the same name on both artboards, or auto-animate will fail.
 
 
 ## Contributing
