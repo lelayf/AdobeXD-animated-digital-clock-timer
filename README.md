@@ -1,4 +1,4 @@
-# Animated-digital-clock-timer
+# Animated Digital Clock Timer
 An Adobe XD Plug-in to create digital clock style countdown timers between any two artboards tied with an auto-animate transition.
 
 ## How to use
