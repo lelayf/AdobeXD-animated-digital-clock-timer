@@ -6,7 +6,7 @@ I created this plugin to easily add custom animated countdown timers to your art
 
 ## How to use
 
-1. Install the package.
+1. Install the package by double-clicking on the file with xdx extension.
 2. In _Design_ mode, select a first  artboard, then shift-select a second one.
 3. In the menus go to Plugins > Animated Digital Clock Timer.
 4. Leave the defaults as they are to simply get an idea of the plugin's capabilities.
