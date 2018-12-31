@@ -1,11 +1,12 @@
 # Animated Digital Clock Timer
 
 I created this plugin to make it easier to design mobile apps that rely on time-based interactions. 
-For instance, you might need to display the time remaining in a game in minutes and seconds (eg. 13:37).
-This plugin will create those numbers and mask a whole lot more that would otherwise be tedious to setup by hand.
+More specifically, it displays the time remaining in a game in minutes and seconds, or hours and minutes (eg. 13:37).
+The plugin will create those numbers and mask a whole lot more that would otherwise be tedious to setup by hand.
 With auto-animate transitions in place, your timer will then offer visually explicit countdowns between any 2 artboards.
 It should look like flight departure times on those big mechanical time tables in the hallways of airports.
 
+![Timer GIF](https://cdn.dribbble.com/users/2864445/screenshots/5673255/timer-black-800-600-9.gif)
 
 ## How to use
 
@@ -13,20 +14,26 @@ It should look like flight departure times on those big mechanical time tables i
 2. In _Design_ mode, select a first  artboard, then shift-select a second one.
 3. In the menus go to Plugins > Animated Digital Clock Timer.
 4. Leave the defaults as they are to simply get an idea of the plugin's capabilities.
-5. Click on "Create Timer Elements".
+5. Click on "Create Timer Elements", you should now have:
+    - the start time on your first artboard
+    - the end time on the second artboard
 6. Switch to _Prototype_ mode.
-7. Add a Tap-triggered, 5 seconds long _Ease-In-Out_, _auto-animate_ transition between the first artboard and the second one.
-8. [Optional] Add a similar Tap-triggered, 5 seconds long _Ease-In-Out_, _auto-animate_ transition between the second artboard and the first one.
+7. Add a transition between between the first artboard and the second one:
+    - Use any trigger you like (_Time_ with no delay works well for this demo), 
+    - _Auto-animate_
+    - _Ease-In-Out_
+    - 5 seconds long
+8. [Optional] Add a similar, reverse transition between the second artboard and the first one.
 8. De-select all elements by clicking anywhere on the canvas.
 9. Click on the Play icon in the top right to play the animation.
 
-From there you can repeat that procedure between any 2 selected artboards, making changes to the font color, family and horizontal spacing.
+From there you can repeat that procedure between any 2 selected artboards, making changes to the font color, font family and horizontal spacing.
 
 ## Good to know
 
 1. To move your timer groups, simply shift-select them both in design mode and move them around.
-2. XD does not have a Fonts API, so for now I decided to let users type the name of their font rather than trap them in a predefined list of common fonts.
-3. The plugin modal dialog will remember the last values you used by storing them in a plugin-specific data file locally on your computer. If you ever run out of storage space that caching feature will silently fail and the dialog will always show the plugin defaults.
+2. XD does not have a comprehensive Fonts API that I know of, so I decided to let users type the name of their font rather than lock them in a predefined list of common fonts.
+3. The plugin modal dialog will remember the last values you used by storing them in a plugin-specific, extremely tiny file locally on your computer. If you ever run out of storage space, that caching feature will silently fail and the dialog will always show the plugin defaults.
 4. If you ever needed to rename the masked groups created by the plugin, make sure to give them the same name on both artboards, or auto-animate will fail.
 
 
