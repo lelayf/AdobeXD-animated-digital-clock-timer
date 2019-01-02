@@ -6,24 +6,29 @@
 *  Visit http://adobexdplatform.com/ for API docs and more sample code.
 */
 
-var {Text, Rectangle, Color} = require("scenegraph") ;
-let commands = require("commands") ;
+const {Text, Rectangle, Color} = require("scenegraph") ;
+const commands = require("commands") ;
 const h = require("./h") ;
 const fs = require("uxp").storage.localFileSystem ;
 
-let dialog ;
-let pluginDataFolder ;
-let settingsFile ; 
-let settings;
-let startTimeValue, endTimeValue, colorValue, fontSizeValue, fontAspectRatioValue, fontFamilyValue ;
+let dialog,
+    pluginDataFolder,
+    settingsFile,
+    settings,
+    startTimeValue, 
+    endTimeValue, 
+    colorValue, 
+    fontSizeValue, 
+    fontAspectRatioValue, 
+    fontFamilyValue ;
 
 async function doSettings(){
     
     pluginDataFolder    = await fs.getDataFolder() ;
     
     try {
-        settingsFile        = await pluginDataFolder.getEntry("timer-settings.txt") ;
-        settings            = await settingsFile.read() ;
+        settingsFile    = await pluginDataFolder.getEntry("timer-settings.txt") ;
+        settings        = await settingsFile.read() ;
     } catch( e ) {
         console.log(e) ;
     } 
@@ -123,7 +128,13 @@ async function getDialog(selection) {
     }
 }
 
-async function createMaskedTextStrips(selection, startTime, endTime, color, fontSize, fontAspectRatio, fontFamily) {
+async function createMaskedTextStrips(  selection, 
+                                        startTime, 
+                                        endTime, 
+                                        color, 
+                                        fontSize, 
+                                        fontAspectRatio, 
+                                        fontFamily) {
 
     const x = 20 ;
     const y = 50 ;
@@ -162,58 +173,58 @@ async function createMaskedTextStrips(selection, startTime, endTime, color, font
     const endSecondTensStrip    = new Text() ;
     const endSecondUnitsStrip   = new Text() ;
 
-    startMinuteTensStrip.fontFamily = fontFamily ;
-    startMinuteUnitsStrip.fontFamily = fontFamily ;
-    endMinuteTensStrip.fontFamily = fontFamily ;
-    endMinuteUnitsStrip.fontFamily = fontFamily ;
-    columnStart.fontFamily = fontFamily ;
-    columnEnd.fontFamily = fontFamily ;
-    startSecondTensStrip.fontFamily = fontFamily ;
-    endSecondTensStrip.fontFamily = fontFamily ;
-    startSecondUnitsStrip.fontFamily = fontFamily ;
-    endSecondUnitsStrip.fontFamily = fontFamily ;
+    startMinuteTensStrip.fontFamily     = fontFamily ;
+    startMinuteUnitsStrip.fontFamily    = fontFamily ;
+    endMinuteTensStrip.fontFamily       = fontFamily ;
+    endMinuteUnitsStrip.fontFamily      = fontFamily ;
+    columnStart.fontFamily              = fontFamily ;
+    columnEnd.fontFamily                = fontFamily ;
+    startSecondTensStrip.fontFamily     = fontFamily ;
+    endSecondTensStrip.fontFamily       = fontFamily ;
+    startSecondUnitsStrip.fontFamily    = fontFamily ;
+    endSecondUnitsStrip.fontFamily      = fontFamily ;
 
     // Minutes tens 
     startMinuteTensStrip.text   = new String("") ;
     var j = Number(endMinuteTens) ;  
-    while( j <  Number(startMinuteTens)){
-        startMinuteTensStrip.text += new String(j);
-        startMinuteTensStrip.text += "\n";
-        j += 1;
+    while( j <  Number(startMinuteTens)) {
+        startMinuteTensStrip.text += new String(j) ;
+        startMinuteTensStrip.text += "\n" ;
+        j += 1 ;
     }
-    startMinuteTensStrip.text   += startMinuteTens;
-    endMinuteTensStrip.text     = startMinuteTensStrip.text;  
+    startMinuteTensStrip.text   += startMinuteTens ;
+    endMinuteTensStrip.text     = startMinuteTensStrip.text ;  
 
     // Minutes units
-    startMinuteUnitsStrip.text = new String("");
-    var j = endMinute; 
-    while( j < startMinute ){
-        startMinuteUnitsStrip.text += new String(j%10);
-        startMinuteUnitsStrip.text += "\n";
-        j += 1;
+    startMinuteUnitsStrip.text = new String("") ;
+    var j = endMinute ; 
+    while( j < startMinute ) {
+        startMinuteUnitsStrip.text += new String(j%10) ;
+        startMinuteUnitsStrip.text += "\n" ;
+        j += 1 ;
     }
-    startMinuteUnitsStrip.text  += startMinuteUnits;
-    endMinuteUnitsStrip.text    = startMinuteUnitsStrip.text;  
+    startMinuteUnitsStrip.text  += startMinuteUnits ;
+    endMinuteUnitsStrip.text    = startMinuteUnitsStrip.text ;  
 
     // Seconds tens 
-    startSecondTensStrip.text   = new String("") ;
-    var cycles = 6-Number(endSecondTens)+Number(startSecondTens)+(minuteSpan-1)*6 ; 
-    for( var j=0; j< cycles; j++){
+    startSecondTensStrip.text   = new String("")  ;
+    var cycles = 6 - Number(endSecondTens) + Number(startSecondTens) + (minuteSpan-1)*6 ; 
+    for( var j=0; j< cycles; j++) {
         startSecondTensStrip.text += new String( (Number(endSecondTens)+j) % 6 ) ;
-        startSecondTensStrip.text += "\n";
+        startSecondTensStrip.text += "\n" ;
     }
-    startSecondTensStrip.text += startSecondTens;
-    endSecondTensStrip.text = startSecondTensStrip.text;  
+    startSecondTensStrip.text   += startSecondTens ;
+    endSecondTensStrip.text     = startSecondTensStrip.text ;  
 
     // Seconds units 
-    startSecondUnitsStrip.text   = new String("") ;
-    var fastCycles = 10-Number(endSecondUnits)+Number(startSecondUnits)+(cycles-1)*10 ; 
-    for( var j=0; j< fastCycles; j++){
+    startSecondUnitsStrip.text = new String("") ;
+    var fastCycles = 10 - Number(endSecondUnits) + Number(startSecondUnits) + (cycles-1)*10 ; 
+    for( var j=0; j< fastCycles; j++) {
         startSecondUnitsStrip.text += new String( (Number(endSecondUnits)+j) % 10 ) ;
-        startSecondUnitsStrip.text += "\n";
+        startSecondUnitsStrip.text += "\n" ;
     }
-    startSecondUnitsStrip.text  += startSecondUnits;
-    endSecondUnitsStrip.text    = startSecondUnitsStrip.text;  
+    startSecondUnitsStrip.text  += startSecondUnits ;
+    endSecondUnitsStrip.text    = startSecondUnitsStrip.text ;  
 
     // column
     columnStart.text    = ":" ;
@@ -222,106 +233,116 @@ async function createMaskedTextStrips(selection, startTime, endTime, color, font
     // set more text properties
     let lineSpacing = Math.round(fontSize * 1.1) ;
     
-    startMinuteTensStrip.fill = new Color(color);     
-    startMinuteTensStrip.fontSize = fontSize;
-    startMinuteTensStrip.lineSpacing = lineSpacing ;
+    startMinuteTensStrip.fill           = new Color(color) ;   
+    startMinuteTensStrip.fontSize       = fontSize ;
+    startMinuteTensStrip.lineSpacing    = lineSpacing ;
 
-    startMinuteUnitsStrip.fill = new Color(color);     
-    startMinuteUnitsStrip.fontSize = fontSize;
-    startMinuteUnitsStrip.lineSpacing = lineSpacing ;
+    startMinuteUnitsStrip.fill          = new Color(color) ;     
+    startMinuteUnitsStrip.fontSize      = fontSize ;
+    startMinuteUnitsStrip.lineSpacing   = lineSpacing ;
 
-    endMinuteTensStrip.fill = new Color(color);     
-    endMinuteTensStrip.fontSize = fontSize;
-    endMinuteTensStrip.lineSpacing = lineSpacing ;
+    endMinuteTensStrip.fill             = new Color(color) ;     
+    endMinuteTensStrip.fontSize         = fontSize ;
+    endMinuteTensStrip.lineSpacing      = lineSpacing ;
 
-    endMinuteUnitsStrip.fill = new Color(color);     
-    endMinuteUnitsStrip.fontSize = fontSize;
-    endMinuteUnitsStrip.lineSpacing = lineSpacing ;
+    endMinuteUnitsStrip.fill            = new Color(color) ;     
+    endMinuteUnitsStrip.fontSize        = fontSize ;
+    endMinuteUnitsStrip.lineSpacing     = lineSpacing ;
 
-    columnStart.fill = new Color(color);     
-    columnStart.fontSize = fontSize ;
-    columnStart.lineSpacing = lineSpacing ;
+    columnStart.fill                    = new Color(color) ;     
+    columnStart.fontSize                = fontSize ;
+    columnStart.lineSpacing             = lineSpacing ;
     
-    columnEnd.fill = new Color(color);     
-    columnEnd.fontSize = fontSize ;
-    columnEnd.lineSpacing = lineSpacing ;
+    columnEnd.fill                      = new Color(color) ;     
+    columnEnd.fontSize                  = fontSize ;
+    columnEnd.lineSpacing               = lineSpacing ;
     
-    startSecondTensStrip.fill = new Color(color);     
-    startSecondTensStrip.fontSize = fontSize ;
-    startSecondTensStrip.lineSpacing = lineSpacing ;
+    startSecondTensStrip.fill           = new Color(color) ;     
+    startSecondTensStrip.fontSize       = fontSize ;
+    startSecondTensStrip.lineSpacing    = lineSpacing ;
 
-    endSecondTensStrip.fill = new Color(color);     
-    endSecondTensStrip.fontSize = fontSize ;
-    endSecondTensStrip.lineSpacing = lineSpacing ;
+    endSecondTensStrip.fill             = new Color(color) ;     
+    endSecondTensStrip.fontSize         = fontSize ;
+    endSecondTensStrip.lineSpacing      = lineSpacing ;
 
-    
-    startSecondUnitsStrip.fill = new Color(color);     
-    startSecondUnitsStrip.fontSize = fontSize ;
-    startSecondUnitsStrip.lineSpacing = lineSpacing ;
+    startSecondUnitsStrip.fill          = new Color(color) ;     
+    startSecondUnitsStrip.fontSize      = fontSize ;
+    startSecondUnitsStrip.lineSpacing   = lineSpacing ;
 
-    
-    endSecondUnitsStrip.fill = new Color(color);     
-    endSecondUnitsStrip.fontSize = fontSize ;
-    endSecondUnitsStrip.lineSpacing = lineSpacing ;
+    endSecondUnitsStrip.fill            = new Color(color) ;     
+    endSecondUnitsStrip.fontSize        = fontSize ;
+    endSecondUnitsStrip.lineSpacing     = lineSpacing ;
 
     let hspace = Math.round(fontAspectRatio*fontSize) ;
 
     // add to artboards
-    selection.items[0].addChild(startMinuteTensStrip); 
-    selection.items[0].addChild(startMinuteUnitsStrip);   
-    selection.items[0].addChild(columnStart);
-    selection.items[0].addChild(startSecondTensStrip);   
-    selection.items[0].addChild(startSecondUnitsStrip);
-    selection.items[1].addChild(endMinuteTensStrip); 
-    selection.items[1].addChild(endMinuteUnitsStrip);
-    selection.items[1].addChild(columnEnd);
-    selection.items[1].addChild(endSecondTensStrip);
-    selection.items[1].addChild(endSecondUnitsStrip);   
+    selection.items[0].addChild(startMinuteTensStrip) ; 
+    selection.items[0].addChild(startMinuteUnitsStrip) ;   
+    selection.items[0].addChild(columnStart) ;
+    selection.items[0].addChild(startSecondTensStrip) ;   
+    selection.items[0].addChild(startSecondUnitsStrip) ;
+    selection.items[1].addChild(endMinuteTensStrip) ; 
+    selection.items[1].addChild(endMinuteUnitsStrip) ;
+    selection.items[1].addChild(columnEnd) ;
+    selection.items[1].addChild(endSecondTensStrip) ;
+    selection.items[1].addChild(endSecondUnitsStrip) ;   
 
     // reposition start time strips
     startMinuteTensStrip.height = minuteTensSpan * lineSpacing - 1 ; 
     startMinuteTensStrip.moveInParentCoordinates(x, lineSpacing - startMinuteTensStrip.height);   
     startMinuteUnitsStrip.height = minuteSpan * lineSpacing - 1 ; 
-    startMinuteUnitsStrip.moveInParentCoordinates(x+hspace, lineSpacing - startMinuteUnitsStrip.height); 
-    columnStart.moveInParentCoordinates(x+hspace*2, lineSpacing);
+    startMinuteUnitsStrip.moveInParentCoordinates(x+hspace, lineSpacing - startMinuteUnitsStrip.height) ; 
+    columnStart.moveInParentCoordinates(x+hspace*2, lineSpacing) ;
     startSecondTensStrip.height = cycles * lineSpacing - 1 ; 
-    startSecondTensStrip.moveInParentCoordinates(x+hspace*2.5, lineSpacing - startSecondTensStrip.height); 
+    startSecondTensStrip.moveInParentCoordinates(x+hspace*2.5, lineSpacing - startSecondTensStrip.height) ; 
     startSecondUnitsStrip.height = fastCycles * lineSpacing - 1 ; 
-    startSecondUnitsStrip.moveInParentCoordinates(x+hspace*3.5, lineSpacing - startSecondUnitsStrip.height); 
+    startSecondUnitsStrip.moveInParentCoordinates(x+hspace*3.5, lineSpacing - startSecondUnitsStrip.height) ; 
  
     // reposition end time strips
-    endMinuteTensStrip.moveInParentCoordinates(x, lineSpacing);   
-    endMinuteUnitsStrip.moveInParentCoordinates(x+hspace, lineSpacing);
-    columnEnd.moveInParentCoordinates(x+hspace*2, lineSpacing);
-    endSecondTensStrip.moveInParentCoordinates(x+hspace*2.5, lineSpacing);
-    endSecondUnitsStrip.moveInParentCoordinates(x+hspace*3.5, lineSpacing);
+    endMinuteTensStrip.moveInParentCoordinates(x, lineSpacing) ;   
+    endMinuteUnitsStrip.moveInParentCoordinates(x+hspace, lineSpacing) ;
+    columnEnd.moveInParentCoordinates(x+hspace*2, lineSpacing) ;
+    endSecondTensStrip.moveInParentCoordinates(x+hspace*2.5, lineSpacing) ;
+    endSecondUnitsStrip.moveInParentCoordinates(x+hspace*3.5, lineSpacing) ;
 
     // add and rename masks
     // IMPORTANT: we do this because all groups should be given the same name 
     // on all artboards or auto-animate will fail and perform a very disappointing 
     // dissolve transition instead.
-    const rectStart = new Rectangle();
-    rectStart.width = hspace*4.5;
-    rectStart.height = lineSpacing;
-    rectStart.name = "Mask" ; 
-    selection.items[0].addChild(rectStart); 
-    rectStart.moveInParentCoordinates(x,2*(lineSpacing-fontSize));
+    const rectStart     = new Rectangle() ;
+    rectStart.width     = hspace*4.5 ;
+    rectStart.height    = lineSpacing ;
+    rectStart.name      = "Mask" ; 
+    selection.items[0].addChild(rectStart) ; 
+    rectStart.moveInParentCoordinates(x,2*(lineSpacing-fontSize)) ;
 
-    const rectEnd = new Rectangle();
-    rectEnd.width = hspace*4.5;
-    rectEnd.height = lineSpacing;
-    rectEnd.name = "Mask" ; 
-    selection.items[1].addChild(rectEnd); 
-    rectEnd.moveInParentCoordinates(x,2*(lineSpacing-fontSize));
+    const rectEnd       = new Rectangle() ;
+    rectEnd.width       = hspace*4.5 ;
+    rectEnd.height      = lineSpacing ;
+    rectEnd.name        = "Mask" ; 
+    selection.items[1].addChild(rectEnd) ; 
+    rectEnd.moveInParentCoordinates(x,2*(lineSpacing-fontSize)) ;
 
-    selection.items = [startMinuteTensStrip, startMinuteUnitsStrip, columnStart, startSecondTensStrip, startSecondUnitsStrip, rectStart];
-    commands.createMaskGroup();
-    let startMaskedGroup = selection.items[0];
-    startMaskedGroup.name = "CounterMask" ;
+    selection.items = [ startMinuteTensStrip, 
+                        startMinuteUnitsStrip, 
+                        columnStart, 
+                        startSecondTensStrip, 
+                        startSecondUnitsStrip, 
+                        rectStart ] ;
 
-    selection.items = [endMinuteTensStrip, endMinuteUnitsStrip, columnEnd, endSecondTensStrip, endSecondUnitsStrip, rectEnd];
-    commands.createMaskGroup();
-    let endMaskedGroup = selection.items[0];
+    commands.createMaskGroup() ;
+    let startMaskedGroup    = selection.items[0] ;
+    startMaskedGroup.name   = "CounterMask" ;
+
+    selection.items = [ endMinuteTensStrip, 
+                        endMinuteUnitsStrip, 
+                        columnEnd, 
+                        endSecondTensStrip, 
+                        endSecondUnitsStrip, 
+                        rectEnd ] ;
+
+    commands.createMaskGroup() ;
+    let endMaskedGroup  = selection.items[0] ;
     endMaskedGroup.name = "CounterMask" ;   
 
 }
@@ -329,9 +350,9 @@ async function createMaskedTextStrips(selection, startTime, endTime, color, font
 module.exports = {
     commands: {
         makeCountdownTimer : async function (selection, documentRoot) {
-            await doSettings();
-            dialog = await getDialog(selection);
-            await document.body.appendChild(dialog).showModal();
+            await doSettings() ;
+            dialog = await getDialog(selection) ;
+            await document.body.appendChild(dialog).showModal() ;
         }
     }
 };
