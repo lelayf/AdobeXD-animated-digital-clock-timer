@@ -1,15 +1,25 @@
 /*
-*  Animated Digital Clock Timer  - Adobe XD plugin
-*  François Le Lay 2018
-*  This lets the user create all elements for a countdown timer to auto-animate between two artboards.
-*
-*  Visit http://adobexdplatform.com/ for API docs and more sample code.
-*/
+* Copyright 2018 François Le Lay <mfworx@gmail.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 
 const {Text, Rectangle, Color} = require("scenegraph") ;
 const commands = require("commands") ;
 const h = require("./h") ;
 const fs = require("uxp").storage.localFileSystem ;
+const { alert, error } = require("./lib/dialogs.js");
 
 let dialog,
     pluginDataFolder,
@@ -43,6 +53,30 @@ async function doSettings(){
     }
 }
 
+async function inconsistentTimestamps(ts, te) {
+    await error("Inconsistent Timestamps ", 
+        ts + " < " + te,
+        "This plugin allows you to create a timelapse of a countdown between two timestamps. In order to function correctly, it requires the start time to be greater that the end time."); 
+}
+
+async function incorrectArtboardSelection() {
+    await error("Incorrect number of artboards selected", 
+        "Please select exactly 2 artboards in Design mode before executing this plugin.",
+        "Steps you can take:",
+        "* Make sure you have 2 artboards or more in your document. If not, create blank ones.",
+        "* Left-click on the name of a first artboard.",
+        "* While holding the SHIFT key, left-click on the \nname of a second artboard.",
+        "* Launch this plugin from the Plugins menu.");
+}
+
+async function incorrectTimeFormat(t){
+    await error("Wrong time format " + t, 
+        "Accepted format XX:YY where:",
+        "* XX between 00 and 99",
+        "* YY between 00 and 59",
+        "* Make sure to use a column separator between XX and YY components");
+}
+
 async function getDialog(selection) {
 
     if (dialog != null) {
@@ -50,81 +84,107 @@ async function getDialog(selection) {
     } 
 
     if (dialog == null) {
+                  
+        if( selection.items.length < 2 ){
+            await incorrectArtboardSelection() ;
+        } else {
 
-        async function onsubmit() {
+            async function onsubmit() {
 
-            let values = {
-                startTime: startTime.value,
-                endTime: endTime.value,
-                color: color.value,
-                fontSize: fontSize.value,
-                fontAspectRatio: fontAspectRatio.value,
-                fontFamily: fontFamily.value
-            }
-            
-            const JSONValues = JSON.stringify(values) ;
-            
-            let newFile = await pluginDataFolder.createEntry("timer-settings.txt", {overwrite: true}) ;
-            await newFile.write(JSONValues) ;
-            await createMaskedTextStrips(   selection,
-                                            startTime.value,
-                                            endTime.value,
-                                            color.value,
-                                            Number(fontSize.value),
-                                            Number(fontAspectRatio.value),
-                                            fontFamily.value ) ;
+                let values = {
+                    startTime: startTime.value,
+                    endTime: endTime.value,
+                    color: color.value,
+                    fontSize: fontSize.value,
+                    fontAspectRatio: fontAspectRatio.value,
+                    fontFamily: fontFamily.value
+                }
+                
+                const JSONValues = JSON.stringify(values) ;
+                
+                let newFile = await pluginDataFolder.createEntry("timer-settings.txt", {overwrite: true}) ;
+                await newFile.write(JSONValues) ;
     
-            //  dialog is automatically closed after submit unless you call e.preventDefault()
-            dialog.close();    
-        }
-                        
-        let startTime, endTime, color, fontSize, fontAspectRatio, fontFamily ;
+                let timeFormat = /^\d\d:[0-5]\d$/ ;
+                let ts_a = timeFormat.exec(startTime.value) ;
+                let ts_b = timeFormat.exec(endTime.value) ;
 
-        dialog =
-            h("dialog",
-                h("form", { method:"dialog", style: { width: 320 }, onsubmit },
-                    h("div", { class: "row" },
-                        h("label",
-                            h("span", "Start Time (mm:ss)"),
-                            startTime = h("input", { value: startTimeValue })
+                if( ts_a == null ) {
+                    dialog.close() ; 
+                    await incorrectTimeFormat(startTime.value) ;
+                } else if( ts_b == null ) {
+                    dialog.close(); 
+                    await incorrectTimeFormat(endTime.value) ;
+                } else if( endTime.value > startTime.value ) {
+                    dialog.close(); 
+                    await inconsistentTimestamps(startTime.value, endTime.value) ;
+                } else {
+                    await createMaskedTextStrips(   selection,
+                                                    startTime.value,
+                                                    endTime.value,
+                                                    color.value,
+                                                    Number(fontSize.value),
+                                                    Number(fontAspectRatio.value),
+                                                    fontFamily.value ) ;
+            
+                    //  dialog is automatically closed after submit unless you call e.preventDefault()
+                    dialog.close(); 
+                }
+            }
+    
+            let startTime, endTime, color, fontSize, fontAspectRatio, fontFamily ;
+
+            dialog =
+                h("dialog",
+                    h("form", { method:"dialog", style: { width: 320 }, onsubmit },
+                        h("div", { class: "row" },
+                            h("label",
+                                h("span", "Start Time (mm:ss)"),
+                                startTime = h("input", { value: startTimeValue })
+                            ),
+                            h("label",
+                                h("span", "End Time (mm:ss)"),
+                                endTime = h("input", { value: endTimeValue })
+                            )
                         ),
-                        h("label",
-                            h("span", "End Time (mm:ss)"),
-                            endTime = h("input", { value: endTimeValue })
-                        )
-                    ),
-                    h("div", { class: "row" },
-                        h("label",
-                            h("span", "Font Color hex #"),
-                            color = h("input", { value: colorValue })
-                        )
-                    ),
-                    h("div", { class: "row" },
-                        h("label",
-                            h("span", "Font size (px)"),
-                            fontSize = h("input", { value: fontSizeValue })
-                        )
-                    ),
-                    h("div", { class: "row" },
-                        h("label",
-                            h("span", "Horizontal Spacing Ratio (> 0.50)"),
-                            fontAspectRatio = h("input", { value: fontAspectRatioValue })
-                        )
-                    ),
-                    h("div", { class: "row" },
-                        h("label",
-                            h("span", "Font family"),
-                            fontFamily = h("input", { value: fontFamilyValue })
-                        )
-                    ),
-                    h("footer",
-                        h("button", { uxpVariant: "primary", onclick(e) { dialog.close("Cancelled") } }, "Cancel"),
-                        h("button", { uxpVariant: "cta", type:"submit", onclick(e) { onsubmit(); e.preventDefault() } }, "Create Timer Elements")
+                        h("div", { class: "row" },
+                            h("label",
+                                h("span", "Font Color hex #"),
+                                color = h("input", { value: colorValue })
+                            )
+                        ),
+                        h("div", { class: "row" },
+                            h("label",
+                                h("span", "Font size (px)"),
+                                fontSize = h("input", { value: fontSizeValue })
+                            )
+                        ),
+                        h("div", { class: "row" },
+                            h("label",
+                                h("span", "Horizontal Spacing Ratio (> 0.50)"),
+                                fontAspectRatio = h("input", { value: fontAspectRatioValue })
+                            )
+                        ),
+                        h("div", { class: "row" },
+                            h("label",
+                                h("span", "Font family"),
+                                fontFamily = h("input", { value: fontFamilyValue })
+                            )
+                        ),
+                        h("div", { class: "row" },
+                            h("label",
+                                h("span", "Once your timer elements are added to your artboards, all you have to do is to switch to Prototype mode and create a few seconds long (e.g. 5s), Ease in-out, auto-animate transition triggered by the action of your choice. Then press play and enjoy the timelapse.")
+                            )
+                        ),
+                        h("footer",
+                            h("button", { uxpVariant: "primary", onclick(e) { dialog.close("Cancelled") } }, "Cancel"),
+                            h("button", { uxpVariant: "cta", type:"submit", onclick(e) { onsubmit(); e.preventDefault() } }, "Create Timer Elements")
+                    )
                 )
-            )
-        );
+            );
 
-        return dialog;        
+            return dialog;
+        }        
     }
 }
 
@@ -135,7 +195,7 @@ async function createMaskedTextStrips(  selection,
                                         fontSize, 
                                         fontAspectRatio, 
                                         fontFamily) {
-
+    
     const x = 20 ;
     const y = 50 ;
 
