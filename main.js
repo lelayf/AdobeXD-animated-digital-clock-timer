@@ -173,7 +173,9 @@ async function getDialog(selection) {
                         ),
                         h("div", { class: "row" },
                             h("label",
-                                h("span", "Once your timer elements are added to your artboards, all you have to do is to switch to Prototype mode and create a few seconds long (e.g. 5s), Ease in-out, auto-animate transition triggered by the action of your choice. Then press play and enjoy the timelapse.")
+                                h("span", "Once your timer elements are added to your artboards, all you have to do " + 
+                                "is to switch to Prototype mode and create a few seconds long (e.g. 5s), Ease in-out," +
+                                " auto-animate transition triggered by the action of your choice. Then press play and enjoy the timelapse.")
                             )
                         ),
                         h("footer",
